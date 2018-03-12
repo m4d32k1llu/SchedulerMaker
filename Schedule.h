@@ -75,7 +75,7 @@ public:
 			horas_semana_da_loja_cumpridas = 0;
 			Create();
 			printf("HORAS SEMANA DA LOJA CUMPRIDAS : %f\n", horas_semana_da_loja_cumpridas);
-			if(horas_semana_da_loja_cumpridas > horas_semana_da_loja*0.97) return;
+			if(horas_semana_da_loja_cumpridas > horas_semana_da_loja*0.99) return;
 			else Reset();
 		}
 	}

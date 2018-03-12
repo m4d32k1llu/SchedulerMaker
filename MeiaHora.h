@@ -25,7 +25,7 @@ public:
 	void Set(int hora, int minutos) {
 		_hora = hora;
 		_minutos = minutos;
-		//_valid = true;
+		_valid = true;
 	}
 	bool IsValid() {
 		return _valid;
