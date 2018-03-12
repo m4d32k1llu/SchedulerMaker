@@ -14,27 +14,33 @@ public:
 	int folgas = 2;
 	int horas_semanais = 40;
 	int horas_semanais_minimas = 38;
-	int horas_por_dia = 8;
+	int horas_por_dia = 10;
 	float horas_semana_da_loja = 0;
 	float horas_semana_da_loja_cumpridas = 0;
-	Semana semana;
+	Semana *semana;
 	std::vector<Trabalhador*> _trabalhadores;
 	std::string _nome;
-	int entrada = 17, saida1 = 24, saida2 = 36, saida3 = 46;
+	int entrada = 17, saida1 = 28, saida2 = 36, saida3 = 46;
 	int pessoas = 6;
 	Schedule(std::string nome) 
 	{
 		_nome = nome;
+		semana = new Semana();
   		srand (time(NULL));
 		/*for(int i = 0; i < dias; i++)
 			for(int j = 0; j < horas_trabalho*2; j++)
 				horas_trabalho[i][j] = false;*/
 	}
 	Schedule() {
+		semana = new Semana();
 		srand (time(NULL));
 		/*for(int i = 0; i < dias; i++)
 			for(int j = 0; j < horas_trabalho*2; j++)
 				horas_trabalho[i][j] = false;*/
+	}
+	~Schedule() {
+		for(auto worker : _trabalhadores)
+			delete worker;
 	}
 	void shuffle_trabalhadores() {
 		Trabalhador *aux;
@@ -54,31 +60,60 @@ public:
 		}
 		return true;
 	}
+	void Reset() {
+		//delete semana;
+		//semana = new Semana();
+		semana->Reset();
+		for(auto worker : _trabalhadores)
+			worker->Reset();
+	}
 	void TryCreate() {
-		int horas = 0;
-		int x = 0;
-		while(!completed()) {
+		int i = 0;
+		while(1) {
+			i++;
+			printf("Creating...\n");
+			horas_semana_da_loja_cumpridas = 0;
+			Create();
+			printf("HORAS SEMANA DA LOJA CUMPRIDAS : %f\n", horas_semana_da_loja_cumpridas);
+			if(horas_semana_da_loja_cumpridas > horas_semana_da_loja*0.97) return;
+			else Reset();
+		}
+	}
+	void Create() {
+		Trabalhador *worker = nullptr;
+		int x = 1;
+		shuffle_trabalhadores();
+		while(x < 100) {
+		//while(!completed()) {
 			x++;
 			for(int d = 0; d < dias; d++) {
-				for(auto worker : _trabalhadores) {
-					if(worker->DeFolga(d)) continue;
-					for(int h = entrada; h < saida3 + 1; h++) {
+				//shuffle_trabalhadores();
+				for(int i = 0; i < _trabalhadores.size(); i++) {
+					//worker = _trabalhadores[i];
+				//for(auto worker : _trabalhadores) {
+					if(_trabalhadores[i]->DeFolga(d)) continue;
+					if(_trabalhadores[i]->GetHorasTrabalhoSemana() >= horas_semanais) continue;
+					for(int h = entrada; h <= saida3 + 1; h++) {
 						//printf("%d %d %d\n",h/2, h%2, i);
-						if(semana.dias[d].AddTrabalhador(h/2, h%2*30, worker) && worker->IncHorasTrabalho(d)) {
-							horas_semana_da_loja_cumpridas += 0.5; 
+						if(semana->dias[d].AddTrabalhador(h/2, h%2*30, _trabalhadores[i])) {
+							if(_trabalhadores[i]->IncHorasTrabalho(d)) {
+								horas_semana_da_loja_cumpridas += 0.5; 
+							}						
 						}
-						if(worker->GetHorasTrabalhoDia(d) >= horas_por_dia) {
+						if(_trabalhadores[i]->GetHorasTrabalhoDia(d) >= horas_por_dia) {
 							//printf("TRABALHADOR SAIU\n");
-							semana.dias[d].TrabalhadorSaiu(worker);
-							break;
+							semana->dias[d].TrabalhadorSaiu(_trabalhadores[i]);
+							//break;
 						}
-						if(worker->GetHorasTrabalhoSemana() >= horas_semanais) {
-							break;
+						if(h == saida1 || h == saida2) {
+							shuffle_trabalhadores();
 						}
+						/*if(_trabalhadores[i]->GetHorasTrabalhoSemana() >= horas_semanais) {
+							break;
+						}*/
 					}
 					//worker->ResetHorasTrabalhoDia();
 				}
-				shuffle_trabalhadores();
 			}
 		}
 	}
@@ -95,7 +130,7 @@ public:
 		_trabalhadores.push_back(new Trabalhador(nome, folga1, folga2));
 	}
 	void render() {
-		semana.render();
+		semana->render();
 		for(auto worker : _trabalhadores) {
 			worker->render1();
 		}

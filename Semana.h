@@ -12,6 +12,9 @@ public:
 	Semana() {
 		
 	}
+	~Semana() {
+		
+	}
 
 	void render() {
 		printf("SEMANA\n");
@@ -19,6 +22,11 @@ public:
 			printf("\nDia %d\n", i+1);
 			dias[i].render();
 		}
+	}
+	void Reset() {
+		for(int i = 0; i < 7; i++) {
+			dias[i].Reset();
+		}	
 	}
 };
 #endif

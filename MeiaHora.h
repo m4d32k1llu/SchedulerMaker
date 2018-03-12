@@ -25,13 +25,21 @@ public:
 	void Set(int hora, int minutos) {
 		_hora = hora;
 		_minutos = minutos;
-		_valid = true;
+		//_valid = true;
 	}
 	bool IsValid() {
 		return _valid;
+	}
+	bool contains(Trabalhador *worker) {
+		for(int i = 0; i < _trabalhadores.size(); i++) {
+			if(worker == _trabalhadores[i]) {
+				return true;
+			}
+		}
+		return false;
 	}	
 	bool AddTrabalhador(Trabalhador *worker) {
-		if(_valid) {
+		if(_valid && !contains(worker)) {
 			_trabalhadores.push_back(worker);
 			return true;
 		}
@@ -42,6 +50,9 @@ public:
 	}
 	std::vector<Trabalhador*> GetTrabalhadores() {
 		return _trabalhadores;
+	}
+	void Reset() {
+		_trabalhadores.clear();
 	}
 	void render() {
 		printf("%d:%d\n", _hora, _minutos);

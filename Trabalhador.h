@@ -4,6 +4,8 @@
 #include <vector>
 #include <iostream>
 #define DIAS 7
+#define HORAS_SEMANA 40
+#define HORAS_DIA 10
 class Trabalhador {
 public:
 	std::string _nome;
@@ -48,7 +50,7 @@ public:
 	}
 	bool IncHorasTrabalho(int dia) {
 		if(folgas[dia]) return false;
-		if(horas_trabalho_semana >= 40 || horas_trabalho_dia[dia] >= 8) {
+		if(horas_trabalho_semana >= HORAS_SEMANA || horas_trabalho_dia[dia] >= HORAS_DIA) {
 			return false;
 		}
 		horas_trabalho_semana += 0.5;
@@ -61,6 +63,10 @@ public:
 	float GetHorasTrabalhoDia(int dia) {
 		//printf("horas dia : %d\n", horas_trabalho_dia[dia]);
 		return horas_trabalho_dia[dia];
+	}
+	void Reset() {
+		ResetHorasTrabalhoDia();
+		ResetHorasTrabalhoSemana();
 	}
 	void ResetHorasTrabalhoDia() {
 		for(int i = 0; i < DIAS; i++)

@@ -31,7 +31,7 @@ public:
 		return 0;
 	}
 	bool contains(Trabalhador *worker) {
-		for(int i; i < _trabalhadores_sairam.size(); i++) {
+		for(int i = 0; i < _trabalhadores_sairam.size(); i++) {
 			if(worker == _trabalhadores_sairam[i]) {
 				return true;
 			}
@@ -58,6 +58,11 @@ public:
 			}
 		}
 		return false;
+	}
+	void Reset() {
+		for(int i = 0; i < 48; i++)
+			meias_horas[i].Reset();
+		_trabalhadores_sairam.clear();
 	}
 	void render() {
 		for(int i = 0; i < 48; i++)
