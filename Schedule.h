@@ -13,6 +13,7 @@ public:
 	int horas_dia = 24;
 	int folgas = 2;
 	int horas_semanais = 40;
+	int horas_semanais_minimas = 38;
 	int horas_por_dia = 8;
 	float horas_semana_da_loja = 0;
 	float horas_semana_da_loja_cumpridas = 0;
@@ -46,32 +47,52 @@ public:
 			_trabalhadores[random] = aux;
 		}
 	}
+	bool completed() {
+		for(auto worker : _trabalhadores) {
+			if(worker->GetHorasTrabalhoSemana() < horas_semanais_minimas)
+				return false;
+		}
+		return true;
+	}
 	void TryCreate() {
 		int horas = 0;
-		for(int d = 0; d < dias; d++) {
-			for(auto worker : _trabalhadores) {
-				for(int h = entrada; h < saida3 + 1; h++) {
-					//printf("%d %d %d\n",h/2, h%2, i);
-					if(semana.dias[d].AddTrabalhador(h/2, h%2*30, worker) && worker->IncHorasTrabalho(d)) {
-						horas_semana_da_loja_cumpridas += 0.5; 
+		int x = 0;
+		while(!completed()) {
+			x++;
+			for(int d = 0; d < dias; d++) {
+				for(auto worker : _trabalhadores) {
+					if(worker->DeFolga(d)) continue;
+					for(int h = entrada; h < saida3 + 1; h++) {
+						//printf("%d %d %d\n",h/2, h%2, i);
+						if(semana.dias[d].AddTrabalhador(h/2, h%2*30, worker) && worker->IncHorasTrabalho(d)) {
+							horas_semana_da_loja_cumpridas += 0.5; 
+						}
+						if(worker->GetHorasTrabalhoDia(d) >= horas_por_dia) {
+							//printf("TRABALHADOR SAIU\n");
+							semana.dias[d].TrabalhadorSaiu(worker);
+							break;
+						}
+						if(worker->GetHorasTrabalhoSemana() >= horas_semanais) {
+							break;
+						}
 					}
-					if(worker->GetHorasTrabalhoDia(d) >= horas_por_dia) {
-						//printf("TRABALHADOR SAIU\n");
-						semana.dias[d].TrabalhadorSaiu(worker);
-						break;
-					}
-					if(worker->GetHorasTrabalhoSemana() >= horas_semanais) {
-						break;
-					}
+					//worker->ResetHorasTrabalhoDia();
 				}
-				//worker->ResetHorasTrabalhoDia();
+				shuffle_trabalhadores();
 			}
-			shuffle_trabalhadores();
 		}
 	}
 	void InitTrabalhador(std::string nome) {
 		horas_semana_da_loja += horas_semanais;
 		_trabalhadores.push_back(new Trabalhador(nome));
+	}
+	void InitTrabalhador(std::string nome, int folga) {
+		horas_semana_da_loja += horas_semanais;
+		_trabalhadores.push_back(new Trabalhador(nome, folga));
+	}
+	void InitTrabalhador(std::string nome, int folga1,int folga2) {
+		horas_semana_da_loja += horas_semanais;
+		_trabalhadores.push_back(new Trabalhador(nome, folga1, folga2));
 	}
 	void render() {
 		semana.render();

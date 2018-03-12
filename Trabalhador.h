@@ -10,6 +10,27 @@ public:
 	int horario;
 	float horas_trabalho_semana;
 	float horas_trabalho_dia[DIAS];
+	bool folgas[DIAS];
+
+	Trabalhador(std::string nome, int folga1, int folga2) {
+		_nome = nome;
+		horas_trabalho_semana = 0;
+		for(int i = 0; i < DIAS; i++) {
+			horas_trabalho_dia[i] = 0;
+			folgas[i] = false;
+		}
+		folgas[folga1-1] = true;
+		folgas[folga2-1] = true;
+	}
+	Trabalhador(std::string nome, int folga) {
+		_nome = nome;
+		horas_trabalho_semana = 0;
+		for(int i = 0; i < DIAS; i++) {
+			horas_trabalho_dia[i] = 0;
+			folgas[i] = false;
+		}
+		folgas[folga-1] = true;
+	}
 	Trabalhador(std::string nome) {
 		_nome = nome;
 		horas_trabalho_semana = 0;
@@ -21,7 +42,12 @@ public:
 		for(int i = 0; i < DIAS; i++)
 			horas_trabalho_dia[i] = 0;
 	}
+	bool DeFolga(int dia) {
+		if(folgas[dia]) return true;
+		return false;
+	}
 	bool IncHorasTrabalho(int dia) {
+		if(folgas[dia]) return false;
 		if(horas_trabalho_semana >= 40 || horas_trabalho_dia[dia] >= 8) {
 			return false;
 		}
