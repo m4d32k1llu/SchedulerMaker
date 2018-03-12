@@ -3,6 +3,7 @@
 #include <string>
 #include <stdio.h>
 #include <cmath>
+#include <cstdlib>
 #include "Semana.h"
 #include "Trabalhador.h"
 
@@ -23,14 +24,27 @@ public:
 	Schedule(std::string nome) 
 	{
 		_nome = nome;
+  		srand (time(NULL));
 		/*for(int i = 0; i < dias; i++)
 			for(int j = 0; j < horas_trabalho*2; j++)
 				horas_trabalho[i][j] = false;*/
 	}
 	Schedule() {
+		srand (time(NULL));
 		/*for(int i = 0; i < dias; i++)
 			for(int j = 0; j < horas_trabalho*2; j++)
 				horas_trabalho[i][j] = false;*/
+	}
+	void shuffle_trabalhadores() {
+		Trabalhador *aux;
+		int random = 0;
+		int size = _trabalhadores.size();
+		for(int i = 0; i < size; i++) {
+			aux = _trabalhadores[i];
+			random = rand() % size;
+			_trabalhadores[i] = _trabalhadores[random];
+			_trabalhadores[random] = aux;
+		}
 	}
 	void TryCreate() {
 		int horas = 0;
@@ -38,16 +52,21 @@ public:
 			for(auto worker : _trabalhadores) {
 				for(int h = entrada; h < saida3 + 1; h++) {
 					//printf("%d %d %d\n",h/2, h%2, i);
-					if(semana.dias[d].AddTrabalhador(h/2, h%2*30, worker) && worker->IncHorasTrabalho()) {
-						//worker->IncHorasTrabalho();
+					if(semana.dias[d].AddTrabalhador(h/2, h%2*30, worker) && worker->IncHorasTrabalho(d)) {
 						horas_semana_da_loja_cumpridas += 0.5; 
 					}
-					if(horas_por_dia <= worker->GetHorasTrabalhoDia()) {
+					if(worker->GetHorasTrabalhoDia(d) >= horas_por_dia) {
+						//printf("TRABALHADOR SAIU\n");
+						semana.dias[d].TrabalhadorSaiu(worker);
+						break;
+					}
+					if(worker->GetHorasTrabalhoSemana() >= horas_semanais) {
 						break;
 					}
 				}
-				worker->ResetHorasTrabalhoDia();
+				//worker->ResetHorasTrabalhoDia();
 			}
+			shuffle_trabalhadores();
 		}
 	}
 	void InitTrabalhador(std::string nome) {
@@ -56,6 +75,9 @@ public:
 	}
 	void render() {
 		semana.render();
+		for(auto worker : _trabalhadores) {
+			worker->render1();
+		}
 		printf("HORAS SEMANA DA LOJA A CUMPRIR: %f\n", horas_semana_da_loja);
 		printf("HORAS SEMANA DA LOJA CUMPRIDAS: %f\n", horas_semana_da_loja_cumpridas);
 	}

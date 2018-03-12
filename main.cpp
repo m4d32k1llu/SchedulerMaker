@@ -6,6 +6,7 @@ int main() {
 	s.InitTrabalhador("Andre");
 	s.InitTrabalhador("Diogo");
 	s.InitTrabalhador("Joao");
+	s.InitTrabalhador("Jose");
 	s.InitTrabalhador("Ruben");
 	s.InitTrabalhador("Cacia");
 	s.TryCreate();
