@@ -31,6 +31,17 @@ public:
 			for(int j = 0; j < horas_trabalho*2; j++)
 				horas_trabalho[i][j] = false;*/
 	}
+	Schedule(int _entrada, int _saida1, int _saida2, int _saida3) {
+		entrada = _entrada;
+		saida1 = _saida1;
+		saida2 = _saida2;
+		saida3 = _saida3;
+		semana = new Semana();
+		srand (time(NULL));
+		/*for(int i = 0; i < dias; i++)
+			for(int j = 0; j < horas_trabalho*2; j++)
+				horas_trabalho[i][j] = false;*/
+	}
 	Schedule() {
 		semana = new Semana();
 		srand (time(NULL));
@@ -69,14 +80,59 @@ public:
 	}
 	void TryCreate() {
 		int i = 0;
+		printf("Creating...\n");
 		while(1) {
 			i++;
-			printf("Creating...\n");
+			//printf("Creating...\n");
 			horas_semana_da_loja_cumpridas = 0;
 			Create();
-			printf("HORAS SEMANA DA LOJA CUMPRIDAS : %f\n", horas_semana_da_loja_cumpridas);
-			if(horas_semana_da_loja_cumpridas > horas_semana_da_loja*0.99) return;
+			//printf("HORAS SEMANA DA LOJA CUMPRIDAS : %f\n", horas_semana_da_loja_cumpridas);
+			if(horas_semana_da_loja_cumpridas > horas_semana_da_loja*0.97) return;
 			else Reset();
+		}
+	}
+	void Create1() {
+		Trabalhador *worker = nullptr;
+		int x = 1;
+		shuffle_trabalhadores();
+		while(x < 100) {
+		//while(!completed()) {
+			x++;
+			for(int d = 0; d < dias; d++) {
+				//shuffle_trabalhadores();
+				for(int i = 0; i < _trabalhadores.size(); i++) {
+					//worker = _trabalhadores[i];
+				//for(auto worker : _trabalhadores) {
+					if(_trabalhadores[i]->DeFolga(d)) continue;
+					if(_trabalhadores[i]->GetHorasTrabalhoSemana() >= horas_semanais) continue;
+					//AddTrabalhadorTurno1();
+					//shuffle_trabalhadores();
+					//AddTrabalhadorTurno2();
+					//shuffle_trabalhadores();
+					//AddTrabalhadorTurno3();
+					//shuffle_trabalhadores();
+					for(int h = entrada; h <= saida3; h++) {
+						//printf("%d %d %d\n",h/2, h%2, i);
+						if(semana->dias[d].AddTrabalhador(h/2, h%2*30, _trabalhadores[i])) {
+							if(_trabalhadores[i]->IncHorasTrabalho(d)) {
+								horas_semana_da_loja_cumpridas += 0.5; 
+							}						
+						}
+						if(_trabalhadores[i]->GetHorasTrabalhoDia(d) >= horas_por_dia) {
+							//printf("TRABALHADOR SAIU\n");
+							semana->dias[d].TrabalhadorSaiu(_trabalhadores[i]);
+							//break;
+						}
+						if(h == saida1 || h == saida2) {
+							shuffle_trabalhadores();
+						}
+						/*if(_trabalhadores[i]->GetHorasTrabalhoSemana() >= horas_semanais) {
+							break;
+						}*/
+					}
+					//worker->ResetHorasTrabalhoDia();
+				}
+			}
 		}
 	}
 	void Create() {
@@ -93,7 +149,7 @@ public:
 				//for(auto worker : _trabalhadores) {
 					if(_trabalhadores[i]->DeFolga(d)) continue;
 					if(_trabalhadores[i]->GetHorasTrabalhoSemana() >= horas_semanais) continue;
-					for(int h = entrada; h <= saida3 + 1; h++) {
+					for(int h = entrada; h <= saida3; h++) {
 						//printf("%d %d %d\n",h/2, h%2, i);
 						if(semana->dias[d].AddTrabalhador(h/2, h%2*30, _trabalhadores[i])) {
 							if(_trabalhadores[i]->IncHorasTrabalho(d)) {
