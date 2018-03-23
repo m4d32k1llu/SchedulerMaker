@@ -1,0 +1,9 @@
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\bin\Debug\SchedulerMaker.exe
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\bin\Debug\SchedulerMaker.pdb
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\obj\Debug\SchedulerMaker.csprojResolveAssemblyReference.cache
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\obj\Debug\SchedulerMaker.Properties.Resources.resources
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\obj\Debug\SchedulerMaker.csproj.GenerateResource.cache
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\obj\Debug\SchedulerMaker.csproj.CoreCompileInputs.cache
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\obj\Debug\SchedulerMaker.exe
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\obj\Debug\SchedulerMaker.pdb
+C:\Users\m4d32k1llu\source\repos\SchedulerMaker\SchedulerMaker\obj\Debug\SchedulerMaker.Form1.resources
